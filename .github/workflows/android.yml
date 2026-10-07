@@ -22,8 +22,18 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - name: Fix Gradle wrapper permissions
+      - name: Fix Gradle wrapper permission
         run: chmod +x gradlew
+
+      - name: Download Gradle distribution
+        run: ./gradlew --version || true
+
+      - name: Fix downloaded Gradle permission
+        run: |
+          find "$HOME/.gradle/wrapper/dists" \
+            -type f \
+            -path "*/bin/gradle" \
+            -exec chmod +x {} \;
 
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace --no-daemon
